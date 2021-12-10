@@ -76,6 +76,8 @@ class ZoneService extends DBService {
 
     async addPlant(zoneID, plantID){
         try {
+            console.log(zoneID);
+            console.log(plantID);
             const { _id, name, imageURL } = (await plants.get(plantID)).data;
             
             const plant = {
@@ -109,7 +111,7 @@ class ZoneService extends DBService {
 		}
     }
 
-        /** 
+    /** 
      * 
      * @param {{
          * plantID: String

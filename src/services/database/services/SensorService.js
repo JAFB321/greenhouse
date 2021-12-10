@@ -10,6 +10,37 @@ class SensorService extends DBService {
 		super(model);
 	}
 
+	async getAll(query = {}, skip, limit) {
+		skip = skip ? Number(skip) : 0;
+		limit = limit ? Number(limit) : 10;
+
+		if (query._id) {
+			try {
+				query._id = new mongoose.mongo.ObjectId(query._id);
+			} catch (error) {
+				console.log('not able to generate mongoose id with content', query._id);
+			}
+		}
+
+		try {
+			let items = await this.model.find(query, '-reads').skip(skip).limit(limit);
+			let total = await this.model.count();
+
+			return {
+				error: false,
+				statusCode: 200,
+				data: items.map((item) => item._doc),
+				total,
+			};
+		} catch (error) {
+			return {
+				error: true,
+				statusCode: 500,
+				error,
+			};
+		}
+	}
+
     async insert(data){
         try {
 
