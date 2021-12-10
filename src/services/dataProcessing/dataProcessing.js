@@ -9,9 +9,11 @@ const notificationsService = require('../notifications/notificationService');
 
 const { SensorService } = require('../database/services/SensorService')
 const { ZoneService } = require('../database/services/ZoneService')
+const { ZoneAlertsService } = require('../database/services/ZoneAlertsService')
 
 const zones = new ZoneService();
 const sensors = new SensorService();
+const zoneAlerts = new ZoneAlertsService();
 
 class DataProcessingService extends IService { 
 
@@ -91,7 +93,7 @@ dataProcessingService.addMiddleware(quality);
 const notifications = new NotificationMiddleware(notificationsService);
 dataProcessingService.addMiddleware(notifications);
 
-const storage = new StorageMiddleware(sensors, zones);
+const storage = new StorageMiddleware(sensors, zones, zoneAlerts);
 dataProcessingService.addMiddleware(storage);
 
 module.exports = dataProcessingService;

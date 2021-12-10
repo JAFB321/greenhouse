@@ -114,13 +114,18 @@ class QualityMiddleware extends IDataMiddleware {
                 this._state.anomalies.minval_count++;
                 dataPackage.passed = false;
 
-                if(this._state.anomalies.minval_count>3){
+                if(this._state.anomalies.minval_count>0){
                     this._state.anomalies.minval_count = 0;
                     dataPackage.passed = true;
                     dataPackage.metadata.errorType = "minval";
                     dataPackage.metadata.errorInfo = {
                         zone: zone.name,
-                        sensor: sensor.type
+                        sensor: sensor.type,
+
+                        zoneID: zone._id.toString(),
+                        plantID: alert.plantID.toString(),
+                        sensorID: sensor._id,
+
                     }
                     dataPackage.metadata.notifs = {
                         email: alert.notifications.email,
@@ -133,13 +138,17 @@ class QualityMiddleware extends IDataMiddleware {
                 this._state.anomalies.maxval_count++;
                 dataPackage.passed = false;
 
-                if(this._state.anomalies.maxval_count>3){
+                if(this._state.anomalies.maxval_count>0){
                     this._state.anomalies.minval_count=0;
                     dataPackage.passed = true;
                     dataPackage.metadata.errorType = "maxval";
                     dataPackage.metadata.errorInfo = {
                         zone: zone.name,
-                        sensor: sensor.type
+                        sensor: sensor.type,
+
+                        zoneID: zone._id.toString(),
+                        plantID: alert.plantID.toString(),
+                        sensorID: sensor._id,
                     }
                     dataPackage.metadata.notifs = {
                         email: alert.notifications.email,
