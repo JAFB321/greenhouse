@@ -19,8 +19,11 @@ DBConnection.init();
 
 
 // ---------- Http server ------------------
+const {PORT, JWT_SECRET_KEY} = process.env;
+
 httpAPI.setConfig({
-    port: process.env.PORT || 4000
+    port: PORT || 4000,
+    jwt_secret_key: JWT_SECRET_KEY || 'greenhouse-iot'
 });
 httpAPI.init((http) => console.log("Http server service running on port "));
 
