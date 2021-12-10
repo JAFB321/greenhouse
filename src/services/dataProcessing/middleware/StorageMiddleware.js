@@ -4,6 +4,9 @@ const { ZoneAlertsService } = require('../../database/services/ZoneAlertsService
 
 class StorageMiddleware extends IDataMiddleware {
 
+    _current_date = new Date(2021, 1, 1);
+    _reads_count = 0;
+
     _sensorService;
     _zoneService;
     _zoneAlertsService;
@@ -22,6 +25,14 @@ class StorageMiddleware extends IDataMiddleware {
 
     init(){
 
+    }
+
+    addDays(days) {
+        var result = new Date(this._current_date);
+        result.setDate(result.getDate() + days);
+        this._current_date = result;
+
+        if(this._current_date.getDate() == 1) console.log(this._current_date.toString());
     }
 
     /**
@@ -61,27 +72,12 @@ class StorageMiddleware extends IDataMiddleware {
             );
         }
 
-        // if(dataPackage.metadata.errorType){
-        //     const {zone, sensor} = dataPackage.metadata.errorInfo;
-        //     const error = {
-        //         zone,
-        //         value,
-        //         sensor,
-        //     }
-        //     // this.sockets.send(error);
-        //     // this.sockets.sockets.emit('data', JSON.stringify(error));
-        //     const {web, email} = dataPackage.metadata.notifs;
-
-        //     if(web){
-        //         this.notificationService.sendWebSocket(error);
-        //     }
-
-        //     if(email){
-        //         this.notificationService.sendEmail(error);
-        //     }
-        //     console.log('notification error');
+        
+        // if(this._reads_count >= 100){
+        //     this.addDays(1);
+        //     this._reads_count = 0;
         // }
-
+        // this._reads_count++;
     }
 }
 

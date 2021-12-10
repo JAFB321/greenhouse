@@ -14,6 +14,7 @@ router.post('/zone/:zoneId/plants', tokenCheck, ZoneController.addPlant);
 // router.get('/zone/:id/warnings', tokenCheck, ZoneController.getWarnings);
 
 router.post('/zone/:zoneId/parameters', tokenCheck, ZoneController.addAlertParameter);
+router.delete('/zone/:zoneId/parameters/:parameterId', tokenCheck, ZoneController.deleteAlertParameter);
 
 router.get('/zone/:id', tokenCheck, ZoneController.get);
 router.get('/zone', tokenCheck, ZoneController.getAll);

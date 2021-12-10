@@ -19,6 +19,8 @@ class ZoneController extends Controller {
 		const { populated } = req.query;
 		let response;
 
+		response = await this.service.getAll(req.query);
+		
 		if (populated) {
 			response = await this.service.getAllPopulated();
 		} else {
@@ -52,9 +54,16 @@ class ZoneController extends Controller {
 	};
 
 	addAlertParameter = async (req, res) => {
-		const { zoneID } = req.params;
+		const { zoneId } = req.params;
 
-		const response = await this.service.addAlertParameter(zoneID, req.body);
+		const response = await this.service.addAlertParameter(zoneId, req.body);
+		return res.status(response.statusCode).send(response);
+	}
+
+	deleteAlertParameter = async (req, res) => {
+		const { zoneId, parameterId } = req.params;
+
+		const response = await this.service.deleteAlertParameter(zoneId, parameterId);
 		return res.status(response.statusCode).send(response);
 	}
 

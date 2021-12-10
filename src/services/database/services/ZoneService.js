@@ -126,7 +126,7 @@ class ZoneService extends DBService {
          */
     async addAlertParameter(zoneID, data){
         try {
-            const { plantID, readingTypeID, dangerLevel, minValue, maxValue, notifyPriority, notifyEmail, notifyWeb} = data
+            const { plantID, readingTypeID, dangerLevel, minValue, maxValue, notifyPriority, notifyEmail, notifyWeb} = data;
             
             const alertParameters = {
                 plantID,
@@ -141,6 +141,8 @@ class ZoneService extends DBService {
                 }
             }
 
+            console.log(alertParameters);
+
             const zone = (await this.model.find({ _id: zoneID }))[0];
 
             if(!zone.alertParameters){
@@ -148,6 +150,42 @@ class ZoneService extends DBService {
             }
 
             zone.alertParameters.push(alertParameters);
+
+			let done = await zone.save();
+			if (done)
+				return {
+					error: false,
+					statusCode: 202
+				};
+		} catch (error) {
+			console.log('error', error);
+			return {
+				error: true,
+				statusCode: 500,
+				message: error.errmsg || 'Not able to create item',
+				errors: error.errors,
+			};
+		}
+    }
+
+    async deleteAlertParameter(zoneID, parameterID){
+        try {
+            const zone = (await this.model.find({ _id: zoneID }))[0];
+
+            if(!zone.alertParameters){
+                zone.alertParameters = [];
+            }
+
+            let newAlertParameters = [];
+
+            zone.alertParameters.forEach(ap => {
+                if(ap._id.toString() !== parameterID) newAlertParameters.push(ap);
+            });
+
+            console.log(zone.alertParameters);
+            console.log(newAlertParameters);
+
+            zone.alertParameters = newAlertParameters;
 
 			let done = await zone.save();
 			if (done)
