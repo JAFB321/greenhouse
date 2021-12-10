@@ -1,10 +1,10 @@
 require('dotenv').config();
 
-const http = require('http');
-const express = require('express');
+
 const DBConnection = require('./services/database/connection');
 const dataProcessing = require('./services/dataProcessing/dataProcessing');
 const notifications = require('./services/notifications/notificationService');
+const httpAPI = require('./services/api/httpAPI');
 
 // ---------- Database Service ----------
 const {DB_URL, DB_NAME, DB_USER, DB_PASS} = process.env;
@@ -19,15 +19,10 @@ DBConnection.init();
 
 
 // ---------- Http server ------------------
-const app = express(); 
-const httpServer = http.createServer(app);
-
-app.use(express.json());
-app.use('/', express.static(__dirname + '/public'));
-
-
-// app.listen(4000, () => console.log('Http server listening on port', 4000));
-httpServer.listen(4000, () => console.log('Http server listening on port', httpServer.address().port));
+httpAPI.setConfig({
+    port: process.env.PORT || 4000
+});
+httpAPI.init((http) => console.log("Http server service running on port "));
 
 // ----------- Data processing  -----------
 const { RABBIT_URL, RABBIT_QUEUE } = process.env;
@@ -41,7 +36,9 @@ dataProcessing.init();
 
 // ----------- Notifications Service ------------
 notifications.setConfig({
-    httpServer: httpServer
+    httpServer: httpAPI.getHttpServer()
 });
 
 notifications.init(() => console.log("Notifications service running"));
+
+console.log('finished');
