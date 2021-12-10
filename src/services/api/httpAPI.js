@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const apiRoutes = require('./routes/index');
+var cors = require('cors');
 
 
 const { IService } = require("../IService");
@@ -16,6 +17,8 @@ class HttpAPIService extends IService {
         this.#app = express();
         this.#httpServer = http.createServer(this.#app);
 
+        this.#app.use(cors())
+
 		this.#app.use(express.json());
 		this.#app.use("/", express.static(__dirname + "/public"));
 
@@ -24,6 +27,7 @@ class HttpAPIService extends IService {
 
         // JWT Token secret
         this.#app.set('JWT_SECRET_KEY', this.#jwt_secret_key);
+
 
 		// app.listen(4000, () => console.log('Http server listening on port', 4000));
 		this.#httpServer.listen(this.#port, callback);
